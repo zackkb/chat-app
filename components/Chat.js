@@ -18,6 +18,6 @@ export default function Chat(props) {
 
 const styles = StyleSheet.create({
   text: {
-    color: "#fff",
+    color: "#ffffff",
   },
 });
