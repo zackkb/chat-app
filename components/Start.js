@@ -7,6 +7,8 @@ import {
   TextInput,
   ImageBackground,
   TouchableOpacity,
+  Platform,
+  KeyboardAvoidingView,
 } from "react-native";
 import BackgroundImage from "../assets/bgimg.png";
 
@@ -76,6 +78,9 @@ export default function Start(props) {
           </Pressable>
         </View>
       </ImageBackground>
+      {Platform.OS === "android" ? (
+        <KeyboardAvoidingView behavior="height" />
+      ) : null}
     </View>
   );
 }
