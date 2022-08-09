@@ -39,6 +39,7 @@ export default class Chat extends React.Component {
     this.referenceChatMessages = firebase.firestore().collection("messages");
   }
 
+  // Retrieves data in "messages" and stores it in state "messages" to render it in view
   onCollectionUpdate = (querySnapshot) => {
     const messages = [];
     // Go through each document
@@ -47,7 +48,7 @@ export default class Chat extends React.Component {
       let data = doc.data();
       messages.push({
         _id: data._id,
-        text: data.text,
+        text: data.text || "",
         createdAt: data.createdAt.toDate(),
         user: {
           _id: data.user._id,
@@ -99,7 +100,6 @@ export default class Chat extends React.Component {
   };
 
   componentDidMount() {
-    this.deleteMessages();
     // Set name as title chat
     let { name } = this.props.route.params;
     this.props.navigation.setOptions({ title: name });
@@ -110,46 +110,48 @@ export default class Chat extends React.Component {
         this.setState({
           isConnected: true,
         });
-      } else
+
+        // Reference to load messages from Firebase
+        this.referenceChatMessages = firebase
+          .firestore()
+          .collection("messages");
+
+        // Authenticate user anonymously
+        this.authUnsubscribe = firebase
+          .auth()
+          .onAuthStateChanged(async (user) => {
+            if (!user) {
+              firebase.auth().signInAnonymously();
+            }
+            this.setState({
+              uid: user.uid,
+              messages: [],
+              user: {
+                _id: user.uid,
+                name: name,
+              },
+            });
+            this.unsubscribe = this.referenceChatMessages
+              .orderBy("createdAt", "desc")
+              .onSnapshot(this.onCollectionUpdate);
+          });
+      } else {
         this.setState({
           isConnected: false,
         });
+        this.getMessages();
+      }
     });
-
-    // If online load messages from Firebase, else load messages locally
-    if (this.state.isConnected === true) {
-      // Reference to load messages from Firebase
-      this.referenceChatMessages = firebase.firestore().collection("messages");
-
-      // Authenticate user anonymously
-      this.authUnsubscribe = firebase.auth().onAuthStateChanged((user) => {
-        if (!user) {
-          firebase.auth().signInAnonymously();
-        }
-        this.setState({
-          uid: user.uid,
-          messages: [],
-          user: {
-            _id: user.uid,
-            name: name,
-          },
-        });
-        this.unsubscribe = this.referenceChatMessages
-          .orderBy("createdAt", "desc")
-          .onSnapshot(this.onCollectionUpdate);
-      });
-    } else {
-      this.getMessages();
-    }
   }
 
   componentWillUnmount() {
-    if (this.isConnected === false) {
+    if (this.isConnected) {
       this.unsubscribe();
+      this.authUnsubscribe();
     }
   }
 
-  // Add message to state
+  // Add message to the state
   onSend(messages = []) {
     this.setState(
       (previousState) => ({
@@ -165,7 +167,6 @@ export default class Chat extends React.Component {
       }
     );
   }
-
   // Add message to Firestore
   addMessages = (message) => {
     this.referenceChatMessages.add({
@@ -193,7 +194,6 @@ export default class Chat extends React.Component {
       />
     );
   }
-
   // Don't render input bar if offline
   renderInputToolbar(props) {
     if (this.state.isConnected === false) {
@@ -204,6 +204,7 @@ export default class Chat extends React.Component {
 
   render() {
     let color = this.props.route.params.color;
+
     return (
       <View style={[{ backgroundColor: color }, { flex: 1 }]}>
         <GiftedChat
