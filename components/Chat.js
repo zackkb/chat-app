@@ -63,13 +63,14 @@ export default class Chat extends React.Component {
   //Offline function to display messages to user offline
   //Gets messages from async storage
   getMessages = async () => {
+    let messages = "";
     try {
       messages = (await AsyncStorage.getItem("messages")) || [];
       this.setState({
         messages: JSON.parse(messages),
       });
     } catch (e) {
-      console.error(e.message);
+      console.log(e.message);
     }
   };
 
@@ -81,7 +82,7 @@ export default class Chat extends React.Component {
         JSON.stringify(this.state.messages)
       );
     } catch (e) {
-      console.error(e.message);
+      console.log(e.message);
     }
   };
 
@@ -93,7 +94,7 @@ export default class Chat extends React.Component {
         messages: [],
       });
     } catch (e) {
-      console.error(e.messages);
+      console.log(e.message);
     }
   };
 
@@ -155,7 +156,7 @@ export default class Chat extends React.Component {
         messages: GiftedChat.append(previousState.messages, messages),
       }),
       () => {
-        // Save messages locally with asyncStorage
+        // Save messages locally with AsyncStorage
         this.saveMessages();
         // Call addMessage with last message in message state
         if (this.state.isConnected === true) {
@@ -170,7 +171,7 @@ export default class Chat extends React.Component {
     this.referenceChatMessages.add({
       uid: this.state.uid,
       _id: message._id,
-      text: message.text,
+      text: message.text || "",
       createdAt: message.createdAt,
       user: message.user,
     });
@@ -202,7 +203,7 @@ export default class Chat extends React.Component {
   }
 
   render() {
-    let { color, name } = this.props.route.params;
+    let color = this.props.route.params.color;
     return (
       <View style={[{ backgroundColor: color }, { flex: 1 }]}>
         <GiftedChat
@@ -210,7 +211,7 @@ export default class Chat extends React.Component {
           renderInputToolbar={this.renderInputToolbar.bind(this)}
           messages={this.state.messages}
           onSend={(messages) => this.onSend(messages)}
-          user={{ _id: this.state.user._id, name: name }}
+          user={{ _id: this.state.user._id, name: this.state.user.name }}
         />
         {Platform.OS === "android" ? (
           <KeyboardAvoidingView behavior="height" />
