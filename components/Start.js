@@ -12,7 +12,7 @@ import {
 } from "react-native";
 import BackgroundImage from "../assets/bgimg.png";
 
-// Create constant that holds background colors for Chat Screen
+// Background color selection
 const colors = {
   black: "#090C08",
   purple: "#474056",
