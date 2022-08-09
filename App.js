@@ -4,6 +4,8 @@ import Start from "./components/Start";
 import Chat from "./components/Chat";
 // import react native gesture handler
 import "react-native-gesture-handler";
+// import to fix polyfill
+import "react-native-url-polyfill/auto";
 
 // import react Navigation
 import { NavigationContainer } from "@react-navigation/native";
