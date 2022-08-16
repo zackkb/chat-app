@@ -124,7 +124,7 @@ export default class Chat extends React.Component {
         this.setState({
           isConnected: true,
         });
-        console.log("online");
+        console.log("Online");
 
         // Reference to load messages from Firebase
         this.referenceChatMessages = firebase
@@ -161,7 +161,7 @@ export default class Chat extends React.Component {
       } else {
         // if the user is offline
         this.setState({ isConnected: false });
-        console.log("offline");
+        console.log("Offline");
         // retrieve messages from AsyncStorage
         this.getMessages();
       }
