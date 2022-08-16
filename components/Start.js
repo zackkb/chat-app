@@ -1,4 +1,5 @@
 import React from "react";
+// import React Native functionalities
 import {
   StyleSheet,
   View,
@@ -10,7 +11,7 @@ import {
   Platform,
   KeyboardAvoidingView,
 } from "react-native";
-
+// import background from assets
 import BackgroundImage from "../assets/bgimg.png";
 
 // Background color selection
@@ -74,7 +75,7 @@ export default class Start extends React.Component {
 
                 <TouchableOpacity
                   accessible={true}
-                  accessibilityLabel="grey circle"
+                  accessibilityLabel="Grey circle"
                   accessibilityHint="Select grey as background color"
                   accessibilityRole="button"
                   onPress={() => this.setState({ color: colors.grey })}

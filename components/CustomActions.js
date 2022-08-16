@@ -4,12 +4,12 @@ import { StyleSheet, View, Text, TouchableOpacity } from "react-native";
 import { connectActionSheet } from "@expo/react-native-action-sheet";
 import * as ImagePicker from "expo-image-picker";
 import * as Location from "expo-location";
-import firebase from "firebase";
+import * as firebase from "firebase";
 import "firebase/firestore";
 
-class CustomAction extends React.Component {
+export default class CustomActions extends React.Component {
   // Upload images to firebase
-  uploadImageFetch = async (uri) => {
+  uploadImage = async (uri) => {
     const blob = await new Promise((resolve, reject) => {
       const xhr = new XMLHttpRequest();
       xhr.onload = function () {
@@ -36,59 +36,59 @@ class CustomAction extends React.Component {
     return await snapshot.ref.getDownloadURL();
   };
 
+  // Lets user choose a picture from their library
   pickImage = async () => {
-    // Ask for permission
-    const { status } = await ImagePicker.getMediaLibraryPermissionsAsync();
+    // Asks user for permission to access library
+    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
     try {
       if (status === "granted") {
         let result = await ImagePicker.launchImageLibraryAsync({
-          mediaTypes: "Images",
+          mediaTypes: ImagePicker.MediaTypeOptions.Images,
         }).catch((error) => {
-          console.log(error);
-          Alert(error.message || "An error has occurred!");
+          console.error(error);
         });
-
         if (!result.cancelled) {
-          const imageUrl = await this.uploadImageFetch(result.uri);
+          const imageUrl = await this.uploadImage(result.uri);
           this.props.onSend({ image: imageUrl });
         }
       }
     } catch (error) {
-      console.log(error.message);
-      Alert(error.message || "An error has occurred!");
+      console.error(error);
     }
   };
 
+  // Lets user take a picture with their camera
   takePhoto = async () => {
-    // Ask for permission
+    // Asks user for permission to access camera and library
     const { status } = await ImagePicker.requestCameraPermissionsAsync();
     try {
       if (status === "granted") {
         let result = await ImagePicker.launchCameraAsync({
-          mediaTypes: "Images",
+          mediaTypes: ImagePicker.MediaTypeOptions.All,
         }).catch((error) => {
-          console.log(error);
-          Alert(error.message || "An error has occurred!");
+          console.error(error);
         });
-
         if (!result.cancelled) {
-          const imageUrl = await this.uploadImageFetch(result.uri);
+          const imageUrl = await this.uploadImage(result.uri);
           this.props.onSend({ image: imageUrl });
         }
       }
     } catch (error) {
-      console.log(error.message);
-      Alert(error.message || "An error has occurred!");
+      console.error(error);
     }
   };
 
+  // Lets user share their current location
   getLocation = async () => {
-    // Ask for permission
+    // Asks for permission to access the users current location
     const { status } = await Location.requestForegroundPermissionsAsync();
     try {
       if (status === "granted") {
-        let result = await Location.getCurrentPositionAsync({});
-
+        let result = await Location.getCurrentPositionAsync({}).catch(
+          (error) => {
+            console.error(error);
+          }
+        );
         if (result) {
           this.props.onSend({
             location: {
@@ -99,22 +99,20 @@ class CustomAction extends React.Component {
         }
       }
     } catch (error) {
-      console.log(error.message);
-      Alert(error.message || "An error has occurred!");
+      console.error(error);
     }
   };
 
-  // Actionsheet
+  // Handles communication features
   onActionPress = () => {
     const options = [
       "Choose From Library",
-      "Take Picture",
-      "Send Location",
+      "Take a Picture",
+      "Share Location",
       "Cancel",
     ];
-    const cancelButtonIndex = 3;
-
-    this.props.showActionSheetWithOptions(
+    const cancelButtonIndex = options.length - 1;
+    this.context.actionSheet().showActionSheetWithOptions(
       {
         options,
         cancelButtonIndex,
@@ -122,10 +120,13 @@ class CustomAction extends React.Component {
       async (buttonIndex) => {
         switch (buttonIndex) {
           case 0:
+            console.log("User wants to upload an image");
             return this.pickImage();
           case 1:
+            console.log("User wants to take a photo");
             return this.takePhoto();
           case 2:
+            console.log("User wants to get their location");
             return this.getLocation();
         }
       }
@@ -173,10 +174,6 @@ const styles = StyleSheet.create({
   },
 });
 
-CustomAction.contextTypes = {
+CustomActions.contextTypes = {
   actionSheet: PropTypes.func,
 };
-
-const CustomActions = connectActionSheet(CustomAction);
-
-export default CustomActions;

@@ -15,14 +15,27 @@ const Stack = createStackNavigator();
 export default class App extends React.Component {
   render() {
     return (
-      <>
-        <NavigationContainer>
-          <Stack.Navigator initialRouteName="Start">
-            <Stack.Screen name="Start" component={Start} />
-            <Stack.Screen name="Chat" component={Chat} />
-          </Stack.Navigator>
-        </NavigationContainer>
-      </>
+      <NavigationContainer>
+        <Stack.Navigator initialRouteName="Start">
+          <Stack.Screen
+            name="Start"
+            component={Start}
+            options={{
+              headerShown: false,
+            }}
+          />
+          <Stack.Screen
+            name="Chat"
+            component={Chat}
+            options={{
+              headerStyle: {
+                backgroundColor: "#06d6a0",
+              },
+              headerBackTitleVisible: false,
+            }}
+          />
+        </Stack.Navigator>
+      </NavigationContainer>
     );
   }
 }
