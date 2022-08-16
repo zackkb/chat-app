@@ -1,7 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { StyleSheet, View, Text, TouchableOpacity } from "react-native";
-import { connectActionSheet } from "@expo/react-native-action-sheet";
 import * as ImagePicker from "expo-image-picker";
 import * as Location from "expo-location";
 import * as firebase from "firebase";
