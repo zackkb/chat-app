@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import {
   StyleSheet,
   View,
@@ -10,6 +10,7 @@ import {
   Platform,
   KeyboardAvoidingView,
 } from "react-native";
+
 import BackgroundImage from "../assets/bgimg.png";
 
 // Background color selection
@@ -20,69 +21,101 @@ const colors = {
   green: "#B9C6AE",
 };
 
-export default function Start(props) {
-  const [name, setName] = useState("");
-  const [color, setColor] = useState("");
+export default class Start extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { name: "", color: "" };
+  }
 
-  return (
-    <View style={styles.container}>
-      <ImageBackground
-        source={BackgroundImage}
-        resizeMode="cover"
-        style={styles.bgImage}
-      >
-        <View style={styles.containerTitle}>
-          <Text style={styles.title}>Talk</Text>
-        </View>
-
-        <View style={styles.loginContainer}>
-          {/* Input box to set user name passed to chat screen */}
-          <TextInput
-            style={styles.input}
-            onChangeText={(name) => setName(name)}
-            value={name}
-            placeholder="Your name..."
-          />
-
-          <View style={styles.colorBox}>
-            {/* Allow user to choose a background color for the chat screen */}
-            <Text style={styles.colorBoxText}>Choose Background Color:</Text>
-            <View style={styles.colorChoice}>
-              <TouchableOpacity
-                onPress={() => setColor(colors.black)}
-                style={styles.color1}
-              ></TouchableOpacity>
-              <TouchableOpacity
-                onPress={() => setColor(colors.purple)}
-                style={styles.color2}
-              ></TouchableOpacity>
-              <TouchableOpacity
-                onPress={() => setColor(colors.grey)}
-                style={styles.color3}
-              ></TouchableOpacity>
-              <TouchableOpacity
-                onPress={() => setColor(colors.green)}
-                style={styles.color4}
-              ></TouchableOpacity>
-            </View>
+  render() {
+    return (
+      <View style={styles.container}>
+        <ImageBackground
+          source={BackgroundImage}
+          resizeMode="cover"
+          style={styles.bgImage}
+        >
+          <View style={styles.containerTitle}>
+            <Text style={styles.title}>Talk</Text>
           </View>
 
-          {/* Open chatroom, passing user name and background color as props */}
-          <Pressable
-            onPress={() => {
-              props.navigation.navigate("Chat", { name: name, color: color });
-            }}
-            style={styles.btnStart}
-          >
-            <Text style={styles.btnStartText}>Start Chatting</Text>
-          </Pressable>
-        </View>
-      </ImageBackground>
-      {Platform.OS === "android" ? (
-        <KeyboardAvoidingView behavior="height" />
-      ) : null}
-    </View>
-  );
+          <View style={styles.loginContainer}>
+            {/* Input box to set user name passed to chat screen */}
+            <TextInput
+              accessibilityLabel="Text field to input your name"
+              accessibilityHint="Name will be used as your chat alias"
+              style={styles.input}
+              onChangeText={(name) => this.setState({ name })}
+              value={this.state.name}
+              placeholder="Your name..."
+            />
+
+            <View style={styles.colorBox}>
+              {/* Allow user to choose a background color for the chat screen */}
+              <Text style={styles.colorBoxText}>Choose Background Color:</Text>
+              <View style={styles.colorChoice}>
+                <TouchableOpacity
+                  accessible={true}
+                  accessibilityLabel="Black circle"
+                  accessibilityHint="Select black as background color"
+                  accessibilityRole="button"
+                  onPress={() => this.setState({ color: colors.black })}
+                  style={styles.color1}
+                ></TouchableOpacity>
+
+                <TouchableOpacity
+                  accessible={true}
+                  accessibilityLabel="Purple circle"
+                  accessibilityHint="Select purple as background color"
+                  accessibilityRole="button"
+                  onPress={() => this.setState({ color: colors.purple })}
+                  style={styles.color2}
+                ></TouchableOpacity>
+
+                <TouchableOpacity
+                  accessible={true}
+                  accessibilityLabel="grey circle"
+                  accessibilityHint="Select grey as background color"
+                  accessibilityRole="button"
+                  onPress={() => this.setState({ color: colors.grey })}
+                  style={styles.color3}
+                ></TouchableOpacity>
+
+                <TouchableOpacity
+                  accessible={true}
+                  accessibilityLabel="Green circle"
+                  accessibilityHint="Select green as background color"
+                  accessibilityRole="button"
+                  onPress={() => this.setState({ color: colors.green })}
+                  style={styles.color4}
+                ></TouchableOpacity>
+              </View>
+            </View>
+
+            {/* Open chatroom, passing user name and background color as props */}
+            <Pressable
+              accessible={true}
+              accessibilityLabel="Button to start chatting"
+              accessibilityHint="Start chatting"
+              accessibilityRole="button"
+              onPress={() =>
+                this.props.navigation.navigate("Chat", {
+                  name: this.state.name,
+                  color: this.state.color,
+                })
+              }
+              style={styles.btnStart}
+            >
+              <Text style={styles.btnStartText}>Start Chatting</Text>
+            </Pressable>
+          </View>
+        </ImageBackground>
+        {Platform.OS === "android" ? (
+          <KeyboardAvoidingView behavior="height" />
+        ) : null}
+      </View>
+    );
+  }
 }
 
 const styles = StyleSheet.create({

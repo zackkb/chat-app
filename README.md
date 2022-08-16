@@ -1,6 +1,6 @@
 # chat-app
 
-A mobile chat app created with React Native and developed with Expo.
+A mobile chat app created with React Native and developed with Expo. Users can authenticate anonymously using Google Firebase.
 
 ### User Stories
 
@@ -17,3 +17,22 @@ A mobile chat app created with React Native and developed with Expo.
 - A page displaying the conversation, as well as an input field and submit button.
 - The chat must provide users with two additional communication features: sending images and location data.
 - Data gets stored online and offline.
+
+## Built With
+
+- React Native
+
+## Dependencies
+
+- React Native
+- Expo
+- Google Firebase
+- Google Firestore Database
+- [GiftedChat](https://github.com/FaridSafi/react-native-gifted-chat)
+- [React Native Async Storage](https://github.com/react-native-async-storage/async-storage)
+- [NetInfo](https://github.com/react-native-netinfo/react-native-netinfo)
+- [react-native-action-sheet](https://github.com/expo/react-native-action-sheet)
+- expo-image-picker
+- expo-camera
+- expo-location
+- react-native-maps
