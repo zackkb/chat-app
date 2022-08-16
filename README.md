@@ -36,3 +36,33 @@ A mobile chat app created with React Native and developed with Expo. Users can a
 - expo-camera
 - expo-location
 - react-native-maps
+
+## Run the Project
+
+1. Install Expo CLI as a global npm package: `npm install --global expo-cli`
+
+2. To run the app on your phone install the Expo app (from Google Play Store or App Store). Or to run on your computer install Android Studio (for Windows and Linux users) and/or Simulator from Xcode.
+
+3. Clone repository:
+
+```bash
+git clone https://github.com/zackkb/chat-app.git
+```
+
+4. Install all dependencies: `npm install`
+
+5. Start project: `expo start`
+
+6. Launch the app on your simulator or on your mobile phone
+
+### Implement own database
+
+Follow the steps to use the app with your own database.
+
+1. Go to [Google Firebase](https://firebase.google.com/) and login with your Google account or create a new account.
+2. Go to the <strong>Firebase console</strong> and create a new project.
+3. Click on <strong>Develop</strong> on the menu and select <strong>Cloud Firestore</strong> and then <strong>Create Database</strong>
+4. Follow the instructions to create a new database. (You can choose to <strong>start in test mode</strong>.)
+5. Create a new collection called "messages".
+6. Got to <strong>Project settings</strong>, you’ll find a section called <strong>Your apps</strong>. Click the <strong>Firestore for Web</strong> button (it may be shown as the </> icon).
+7. A new screen opens asking you to register your web application to connect to the Cloud Firestore database you just created. Enter a name for your chat application and then click <strong>Register</strong> to generate the configuration code. Copy the contents of the firebaseConfig object and paste this configuration info into the firebaseConfig in Chat.js.
