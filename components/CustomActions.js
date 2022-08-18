@@ -39,21 +39,24 @@ class CustomAction extends React.Component {
   // Lets user choose a picture from their library
   pickImage = async () => {
     // Asks user for permission to access library
-    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    const { status } = await ImagePicker.getMediaLibraryPermissionsAsync();
     try {
       if (status === "granted") {
         let result = await ImagePicker.launchImageLibraryAsync({
-          mediaTypes: ImagePicker.MediaTypeOptions.Images,
+          mediaTypes: "Images",
         }).catch((error) => {
-          console.error(error);
+          console.log(error);
+          Alert(error.message || "An error has occurred!");
         });
+
         if (!result.cancelled) {
-          const imageUrl = await this.uploadImage(result.uri);
+          const imageUrl = await this.uploadImageFetch(result.uri);
           this.props.onSend({ image: imageUrl });
         }
       }
     } catch (error) {
-      console.error(error);
+      console.log(error.message);
+      Alert(error.message || "An error has occurred!");
     }
   };
 
@@ -64,17 +67,20 @@ class CustomAction extends React.Component {
     try {
       if (status === "granted") {
         let result = await ImagePicker.launchCameraAsync({
-          mediaTypes: ImagePicker.MediaTypeOptions.All,
+          mediaTypes: "Images",
         }).catch((error) => {
-          console.error(error);
+          console.log(error);
+          Alert(error.message || "An error has occurred!");
         });
+
         if (!result.cancelled) {
-          const imageUrl = await this.uploadImage(result.uri);
+          const imageUrl = await this.uploadImageFetch(result.uri);
           this.props.onSend({ image: imageUrl });
         }
       }
     } catch (error) {
-      console.error(error);
+      console.log(error.message);
+      Alert(error.message || "An error has occurred!");
     }
   };
 
@@ -84,11 +90,8 @@ class CustomAction extends React.Component {
     const { status } = await Location.requestForegroundPermissionsAsync();
     try {
       if (status === "granted") {
-        let result = await Location.getCurrentPositionAsync({}).catch(
-          (error) => {
-            console.error(error);
-          }
-        );
+        let result = await Location.getCurrentPositionAsync({});
+
         if (result) {
           this.props.onSend({
             location: {
@@ -99,7 +102,8 @@ class CustomAction extends React.Component {
         }
       }
     } catch (error) {
-      console.error(error);
+      console.log(error.message);
+      Alert(error.message || "An error has occurred!");
     }
   };
 
