@@ -4,7 +4,7 @@ import { StyleSheet, View, Text, TouchableOpacity } from "react-native";
 import { connectActionSheet } from "@expo/react-native-action-sheet";
 import * as ImagePicker from "expo-image-picker";
 import * as Location from "expo-location";
-import * as firebase from "firebase";
+import firebase from "firebase";
 import "firebase/firestore";
 
 class CustomAction extends React.Component {
@@ -46,17 +46,15 @@ class CustomAction extends React.Component {
           mediaTypes: "Images",
         }).catch((error) => {
           console.log(error);
-          Alert(error.message || "An error has occurred!");
         });
 
         if (!result.cancelled) {
-          const imageUrl = await this.uploadImageFetch(result.uri);
+          const imageUrl = await this.uploadImage(result.uri);
           this.props.onSend({ image: imageUrl });
         }
       }
     } catch (error) {
       console.log(error.message);
-      Alert(error.message || "An error has occurred!");
     }
   };
 
@@ -70,17 +68,15 @@ class CustomAction extends React.Component {
           mediaTypes: "Images",
         }).catch((error) => {
           console.log(error);
-          Alert(error.message || "An error has occurred!");
         });
 
         if (!result.cancelled) {
-          const imageUrl = await this.uploadImageFetch(result.uri);
+          const imageUrl = await this.uploadImage(result.uri);
           this.props.onSend({ image: imageUrl });
         }
       }
     } catch (error) {
       console.log(error.message);
-      Alert(error.message || "An error has occurred!");
     }
   };
 
@@ -103,7 +99,6 @@ class CustomAction extends React.Component {
       }
     } catch (error) {
       console.log(error.message);
-      Alert(error.message || "An error has occurred!");
     }
   };
 
